@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes wave-flow {
+  0% { transform: translate(-50%, 0) rotate(0deg); }
+  50% { transform: translate(-50%, -2%) rotate(180deg); }
+  100% { transform: translate(-50%, 0) rotate(360deg); }
+}
+
+.hormone-wave-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wave-layer {
+  position: absolute;
+  top: 70%; /* Adjust this to move the wave up or down */
+  left: 50%;
+  width: 250%;
+  height: 250%;
+  background: linear-gradient(180deg, rgba(255, 182, 193, 0.4) 0%, rgba(255, 138, 128, 0.1) 100%);
+  border-radius: 42%;
+  animation: wave-flow 15s infinite linear;
+}
+
+.wave-layer-back {
+  top: 72%;
+  background: rgba(255, 224, 230, 0.3);
+  animation: wave-flow 20s infinite linear reverse;
+  border-radius: 40%;
+}
