@@ -33,3 +33,44 @@
   animation: wave-flow 20s infinite linear reverse;
   border-radius: 40%;
 }
+
+/* Makes the calendar take up the full width of its card */
+.react-calendar {
+  width: 100% !important;
+  max-width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  font-family: inherit !important;
+}
+
+/* Styles the individual date tiles */
+.react-calendar__tile {
+  padding: 20px 10px !important; /* Makes tiles bigger/taller */
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  color: #2D1B15 !important;
+  border-radius: 20px !important;
+  transition: all 0.3s ease;
+}
+
+/* Today's date styling */
+.react-calendar__tile--now {
+  background: #FFE0E6 !important;
+  color: #FF4D6D !important;
+}
+
+/* Selected date styling */
+.react-calendar__tile--active {
+  background: #2D1B15 !important;
+  color: white !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+}
+
+/* Navigation buttons (arrows and month name) */
+.react-calendar__navigation button {
+  font-size: 1.3rem !important;
+  font-weight: 900 !important;
+  color: #2D1B15 !important;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
