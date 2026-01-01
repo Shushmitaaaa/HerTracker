@@ -48,7 +48,7 @@ const Navbar = () => {
   return (
     <nav className="flex items-center gap-2 bg-white/70 backdrop-blur-2xl border border-white/80 p-2 rounded-[40px] shadow-2xl">
       {navItems.map((item) => {
-        // The highlight shows if you are hovering OR if it's the current page (and not hovering elsewhere)
+        
         const isHighlighted = hoveredTab === item.name || (activeTab === item.name && hoveredTab === null);
         
         return (

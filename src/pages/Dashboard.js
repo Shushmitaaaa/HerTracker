@@ -129,7 +129,8 @@ const Dashboard = () => {
 
         {/* ROW 3: CALENDAR & ANALYSIS (Balanced 8/4 Split) */}
         {/* ROW 3: CALENDAR & ANALYSIS */}
-        <section className="mb-20">
+        {/* <section className="mb-20"> */}
+        <section id="cycle-section" className="scroll-mt-32 mb-20">
         <div className="flex justify-between items-center mb-10 px-4">
             <h3 className="text-4xl font-black text-[#2D1B15] tracking-tight">Cycle History</h3>
             <div className="bg-white px-8 py-3 rounded-full shadow-lg border border-rose-100 flex items-center gap-3">

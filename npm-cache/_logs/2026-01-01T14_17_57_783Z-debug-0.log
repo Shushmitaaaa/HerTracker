@@ -7,6 +7,7 @@
 6 silly config load:file:E:\npm-cache\etc\npmrc
 7 verbose title npm start
 8 verbose argv "start"
-9 verbose logfile logs-max:10 dir:E:\mernn\hertrackerr\npm-cache\_logs\2025-12-31T09_20_17_264Z-
-10 verbose logfile E:\mernn\hertrackerr\npm-cache\_logs\2025-12-31T09_20_17_264Z-debug-0.log
-11 silly logfile done cleaning log files
+9 verbose logfile logs-max:10 dir:E:\mernn\hertrackerr\npm-cache\_logs\2026-01-01T14_17_57_783Z-
+10 verbose logfile E:\mernn\hertrackerr\npm-cache\_logs\2026-01-01T14_17_57_783Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
