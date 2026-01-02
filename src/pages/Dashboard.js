@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 // import Calendar from 'react-calendar';
 // import 'react-calendar/dist/Calendar.css';
@@ -15,6 +13,26 @@ const Dashboard = () => {
   const [daysUntil, setDaysUntil] = useState(8);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [date, setDate] = useState(new Date());
+
+ 
+  const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+
+  const toggleSymptom = (symptom) => {
+    setSelectedSymptoms(prev => 
+      prev.includes(symptom) ? prev.filter(s => s !== symptom) : [...prev, symptom]
+    );
+  };
+
+  const handleSaveLog = () => {
+    console.log("Data package for Axios:", {
+      date: new Date().toISOString(),
+      symptoms: selectedSymptoms,
+      phase: "Luteal"
+    });
+    setIsModalOpen(false);
+    setSelectedSymptoms([]); 
+  };
+  
 
   return (
     <div className="min-h-screen bg-[#FFF0F3] font-sans antialiased text-[#3C2A21] pb-500 relative overflow-hidden">
@@ -117,9 +135,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* ROW 3: CALENDAR & ANALYSIS (Balanced 8/4 Split) */}
         {/* ROW 3: CALENDAR & ANALYSIS */}
-        {/* <section className="mb-20"> */}
         <section id="cycle-section" className="scroll-mt-60 mb-20">
         <div className="flex justify-between items-center mb-10 px-4">
             <h3 className="text-4xl font-black text-[#2D1B15] tracking-tight">Cycle History</h3>
@@ -129,17 +145,13 @@ const Dashboard = () => {
             </div>
         </div>
         
-        {/* The Container Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 bg-white/40 backdrop-blur-3xl rounded-[60px] p-8 lg:p-12 shadow-xl border border-white">
-            
-            {/* Calendar Side - Increased to span 8 columns */}
             <div className="lg:col-span-8 bg-white rounded-[45px] p-10 shadow-2xl border border-rose-50/50 flex items-center justify-center">
             <div className="w-full">
                 <CycleCalendar />
             </div>
             </div>
 
-            {/* Insights Side - Spans 4 columns */}
             <div className="lg:col-span-4 flex flex-col gap-8">
             <div className="bg-gradient-to-br from-rose-500 to-rose-600 p-10 rounded-[45px] shadow-2xl text-white relative group overflow-hidden">
                 <Sparkles size={60} className="absolute right-[-10px] bottom-[-10px] opacity-20" />
@@ -163,26 +175,43 @@ const Dashboard = () => {
         </section>
       </main>
 
-      {/* FULL SCREEN MODAL */}
+      {/* MODAL MODIFICATION: Added onClick logic to buttons */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-8">
           <div className="absolute inset-0 bg-[#2D1B15]/60 backdrop-blur-xl" onClick={() => setIsModalOpen(false)}></div>
           <div className="relative bg-white w-full max-w-4xl rounded-[60px] p-16 shadow-[0_50px_100px_rgba(0,0,0,0.4)] animate-in zoom-in-95 duration-300">
             <h2 className="text-5xl font-black text-[#2D1B15] text-center mb-16 tracking-tight">Today's Vibe?</h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-              {['Radiant', ' Charged', 'Cozy', 'Flowy'].map((s) => (
-                <button key={s} className="py-10 rounded-[40px] bg-rose-50/50 hover:bg-rose-500 hover:text-white text-[#2D1B15] font-black text-2xl transition-all active:scale-90 border-2 border-transparent hover:shadow-2xl">
+              {['Radiant', 'Charged', 'Cozy', 'Flowy'].map((s) => (
+                <button 
+                  key={s} 
+                  onClick={() => toggleSymptom(s)}
+                  className={`py-10 rounded-[40px] text-2xl font-black transition-all active:scale-90 border-4 ${
+                    selectedSymptoms.includes(s) 
+                      ? 'bg-rose-500 text-white border-rose-200 shadow-2xl' 
+                      : 'bg-rose-50/50 text-[#2D1B15] border-transparent hover:bg-rose-100'
+                  }`}
+                >
                   {s}
                 </button>
               ))}
             </div>
-            <button 
-                onClick={() => navigate('/chat')} 
-                className="w-full bg-[#2D1B15] text-white py-10 rounded-[45px] font-black text-3xl shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-6 group hover:bg-black cursor-pointer"
-                >
-                <MessageCircle size={40} className="text-rose-400 group-hover:rotate-12 transition-transform" /> 
-                Open AI Health Assistant
-            </button>
+            <div className="flex flex-col gap-4">
+              <button 
+                  onClick={handleSaveLog} 
+                  className="w-full bg-[#2D1B15] text-white py-10 rounded-[45px] font-black text-3xl shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-6 group hover:bg-black cursor-pointer"
+                  >
+                  <Sparkles size={40} className="text-rose-400 group-hover:rotate-12 transition-transform" /> 
+                  Complete Daily Log
+              </button>
+              <button 
+                  onClick={() => navigate('/chat')} 
+                  className="w-full bg-rose-500 text-white py-8 rounded-[45px] font-black text-2xl flex items-center justify-center gap-6 group cursor-pointer"
+                  >
+                  <MessageCircle size={32} /> 
+                  Ask AI Helper
+              </button>
+            </div>
           </div>
         </div>
       )}
