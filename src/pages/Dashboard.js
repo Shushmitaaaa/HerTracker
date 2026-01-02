@@ -17,32 +17,21 @@ const Dashboard = () => {
   const [date, setDate] = useState(new Date());
 
   return (
-    <div className="min-h-screen bg-[#FFF0F3] font-sans antialiased text-[#3C2A21] pb-12 relative overflow-hidden">
+    <div className="min-h-screen bg-[#FFF0F3] font-sans antialiased text-[#3C2A21] pb-500 relative overflow-hidden">
       
       {/* BACKGROUND BLOBS - Scaled up for Desktop */}
       <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-gradient-to-br from-pink-300/30 to-purple-300/20 rounded-full blur-[150px] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-gradient-to-tr from-orange-200/30 to-rose-300/20 rounded-full blur-[120px] pointer-events-none"></div>
 
-      {/* HEADER - Increased padding for wide screens */}
-     {/* <header className="w-full px-8 lg:px-20 pt-12 pb-8 flex justify-between items-center relative z-10">
-        <div>
-          <p className="text-[20px] font-black text-rose-500 uppercase tracking-[0.4em] mb-2 drop-shadow-sm">Hey Beautiful</p>
-          <h1 className="text-6xl font-black tracking-tight text-[#2D1B15]">Overview</h1>
-        </div>
-        <div className="flex gap-4">
-            <button className="h-16 w-16 bg-white rounded-[24px] shadow-xl border border-white flex items-center justify-center text-rose-500 hover:rotate-12 transition-all cursor-pointer">
-                <Heart fill="currentColor" size={32} />
-            </button>
-        </div>
-      </header>  */}
+      
       {/* HEADER - Updated for Integrated Navbar */}
-      <header className="w-full px-8 lg:px-20 pt-12 pb-8 flex justify-between items-center relative z-20">
+       <header className="w-full px-8 lg:px-20 pt-12 pb-8 flex justify-between items-center relative z-20">
         <div className="flex-shrink-0">
           <p className="text-[20px] font-black text-rose-500 uppercase tracking-[0.4em] mb-2 drop-shadow-sm">Hey Beautiful</p>
           <h1 className="text-6xl font-black tracking-tight text-[#2D1B15]">Overview</h1>
         </div>
 
-        {/* THE NAVBAR - Perfectly Centered */}
+        
         <div className="hidden md:block absolute left-1/2 -translate-x-1/2 mt-6">
            <Navbar />
         </div>
@@ -52,8 +41,9 @@ const Dashboard = () => {
                 <Heart fill="currentColor" size={32} />
             </button>
         </div>
-      </header>
+      </header> 
       
+
       
 
 
@@ -130,7 +120,7 @@ const Dashboard = () => {
         {/* ROW 3: CALENDAR & ANALYSIS (Balanced 8/4 Split) */}
         {/* ROW 3: CALENDAR & ANALYSIS */}
         {/* <section className="mb-20"> */}
-        <section id="cycle-section" className="scroll-mt-32 mb-20">
+        <section id="cycle-section" className="scroll-mt-60 mb-20">
         <div className="flex justify-between items-center mb-10 px-4">
             <h3 className="text-4xl font-black text-[#2D1B15] tracking-tight">Cycle History</h3>
             <div className="bg-white px-8 py-3 rounded-full shadow-lg border border-rose-100 flex items-center gap-3">

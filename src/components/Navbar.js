@@ -27,23 +27,38 @@ const Navbar = () => {
     { name: 'Me', path: '/profile' },
   ];
 
-  const handleNavClick = (path, name) => {
+
+const handleNavClick = (path, name) => {
     if (name === 'Cycle') {
-      // Direct navigation to the Calendar ID on your Dashboard
       const element = document.getElementById('cycle-section');
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        // Calculate where the element is + current scroll - a 150px gap
+        const offset = 150; 
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        setActiveTab('Today');
       } else {
-        // If the user is on /chat or /profile, go home first, then scroll
         navigate('/');
         setTimeout(() => {
-          document.getElementById('cycle-section')?.scrollIntoView({ behavior: 'smooth' });
+          const el = document.getElementById('cycle-section');
+          if (el) {
+            window.scrollTo({ top: el.offsetTop - 150, behavior: 'smooth' });
+          }
         }, 100);
       }
     } else {
       navigate(path);
     }
   };
+
+
 
   return (
     <nav className="flex items-center gap-2 bg-white/70 backdrop-blur-2xl border border-white/80 p-2 rounded-[40px] shadow-2xl">
