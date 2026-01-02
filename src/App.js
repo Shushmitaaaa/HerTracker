@@ -38,13 +38,15 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import AIChat from './pages/AIChat'; 
 import Profile from './pages/Profile';
+import Login from './pages/Login';
 
 function App() {
   return (
     <Router>
         
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/chat" element={<AIChat />} />
             {/* <Route path="/calendar" element={<Dashboard />} /> */}
             <Route path="/profile" element={<Profile />} />
