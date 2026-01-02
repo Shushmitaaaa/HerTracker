@@ -37,6 +37,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import AIChat from './pages/AIChat'; 
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -46,7 +47,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/chat" element={<AIChat />} />
             {/* <Route path="/calendar" element={<Dashboard />} /> */}
-            <Route path="/profile" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
        
       
