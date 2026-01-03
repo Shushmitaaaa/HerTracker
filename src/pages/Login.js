@@ -16,13 +16,13 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-[#FFF0F3] flex items-center justify-center p-6 relative overflow-hidden font-sans">
       
-      {/* Dynamic Background Blobs */}
+     
       <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-rose-300/20 rounded-full blur-[120px] animate-pulse"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-300/20 rounded-full blur-[100px]"></div>
 
       <div className="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 bg-white/40 backdrop-blur-3xl rounded-[60px] shadow-[0_50px_100px_rgba(255,145,175,0.15)] border border-white overflow-hidden relative z-10">
         
-        {/* Left Side: Branding/Vibe */}
+        
         <div className="hidden lg:flex flex-col justify-center p-20 bg-gradient-to-br from-rose-400 to-rose-600 text-white relative">
           <Sparkles className="absolute top-10 left-10 opacity-20" size={100} />
           <div className="relative z-10">
@@ -39,7 +39,7 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Right Side: Form */}
+        
         <div className="p-12 lg:p-20 flex flex-col justify-center bg-white/60">
           <div className="mb-12">
             <h2 className="text-5xl font-black text-[#2D1B15] mb-4 tracking-tight">
@@ -89,7 +89,7 @@ const Login = () => {
   );
 };
 
-// Simple User icon fallback since we didn't import it
+
 const User = ({ className, size }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
 );

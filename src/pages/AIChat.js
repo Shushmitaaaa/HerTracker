@@ -8,12 +8,12 @@ const AIChat = () => {
 
   return (
     <div className="min-h-screen bg-[#FFF0F3] font-sans flex flex-col relative overflow-hidden">
-      {/* Background Blobs for that Apple look */}
+    
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-rose-200/40 rounded-full blur-[120px] pointer-events-none"></div>
 
-      {/* Header */}
+     
       <header className="w-full px-8 lg:px-20 py-8 flex items-center gap-8 bg-white/20 backdrop-blur-md border-b border-white relative z-10">
-        <button onClick={() => navigate('/')} className="p-4 bg-white rounded-2xl shadow-sm hover:scale-110 transition-all cursor-pointer">
+        <button onClick={() => navigate('/dashboard')} className="p-4 bg-white rounded-2xl shadow-sm hover:scale-110 transition-all cursor-pointer">
           <ArrowLeft size={24} />
         </button>
         <div className="flex items-center gap-4">
@@ -24,7 +24,7 @@ const AIChat = () => {
         </div>
       </header>
 
-      {/* Chat Space */}
+     
       <main className="flex-1 overflow-y-auto px-8 lg:px-[25%] py-12 space-y-8 relative z-10">
         <div className="flex items-start gap-4">
           <div className="bg-white/80 backdrop-blur-xl p-6 rounded-[30px] rounded-tl-none shadow-sm border border-white max-w-[80%]">
@@ -33,7 +33,7 @@ const AIChat = () => {
         </div>
       </main>
 
-      {/* Input - Sticky at bottom */}
+      
       <div className="p-8 lg:px-[25%] relative z-10">
         <div className="bg-white rounded-[35px] p-3 shadow-2xl flex items-center gap-4 border border-white/50">
           <input 

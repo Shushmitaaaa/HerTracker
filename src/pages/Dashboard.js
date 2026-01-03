@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // import Calendar from 'react-calendar';
 // import 'react-calendar/dist/Calendar.css';
-import { Sparkles, Heart, Plus, ChevronRight, Flower, Activity, MessageCircle, Moon, Zap, Target } from 'lucide-react';
+import { Sparkles, Heart, Plus, ChevronRight, Flower, Activity, MessageCircle, Moon, Zap, Target, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CycleCalendar from '../components/CycleCalendar';
 import Navbar from '../components/Navbar';
@@ -37,12 +37,11 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-[#FFF0F3] font-sans antialiased text-[#3C2A21] pb-500 relative overflow-hidden">
       
-      {/* BACKGROUND BLOBS - Scaled up for Desktop */}
+    
       <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-gradient-to-br from-pink-300/30 to-purple-300/20 rounded-full blur-[150px] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-gradient-to-tr from-orange-200/30 to-rose-300/20 rounded-full blur-[120px] pointer-events-none"></div>
 
-      
-      {/* HEADER - Updated for Integrated Navbar */}
+    
        <header className="w-full px-8 lg:px-20 pt-12 pb-8 flex justify-between items-center relative z-20">
         <div className="flex-shrink-0">
           <p className="text-[20px] font-black text-rose-500 uppercase tracking-[0.4em] mb-2 drop-shadow-sm">Hey Beautiful</p>
@@ -67,10 +66,10 @@ const Dashboard = () => {
 
       <main className="w-full px-8 lg:px-20 relative z-10">
         
-        {/* ROW 1: HERO GRID (Stretches full width) */}
+      
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10">
           
-          {/* Main Counter (7/12 Width) */}
+      
           <div className="lg:col-span-8 relative bg-white/50 backdrop-blur-3xl rounded-[60px] p-12 lg:p-20 shadow-[0_40px_100px_rgba(255,145,175,0.2)] border border-white/80 flex flex-col items-center justify-center overflow-hidden group min-h-[500px]">
             <div className="hormone-wave-container">
                 <div className="wave-layer"></div>
@@ -89,7 +88,7 @@ const Dashboard = () => {
             </p>
           </div>
 
-          {/* Side Performance Cards (4/12 Width) */}
+         
           <div className="lg:col-span-4 grid grid-rows-2 gap-8">
             <div className="bg-[#2D1B15] rounded-[50px] p-10 text-white shadow-2xl flex flex-col justify-center relative overflow-hidden group">
                 <Zap className="absolute right-[-20px] top-[-20px] text-rose-500/20 w-40 h-40 group-hover:rotate-12 transition-transform duration-700" />
@@ -106,7 +105,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* ROW 2: ACTION GRID (3 Equal Columns) */}
+       
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
           
           <div onClick={() => setIsModalOpen(true)} className="lg:col-span-2 group bg-gradient-to-r from-[#FF7E7E] to-[#FF9A9E] rounded-[50px] p-12 text-white shadow-2xl flex items-center justify-between cursor-pointer hover:translate-y-[-8px] transition-all">
@@ -135,7 +134,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* ROW 3: CALENDAR & ANALYSIS */}
+       
         <section id="cycle-section" className="scroll-mt-60 mb-20">
         <div className="flex justify-between items-center mb-10 px-4">
             <h3 className="text-4xl font-black text-[#2D1B15] tracking-tight">Cycle History</h3>
@@ -175,11 +174,14 @@ const Dashboard = () => {
         </section>
       </main>
 
-      {/* MODAL MODIFICATION: Added onClick logic to buttons */}
+      
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-8">
           <div className="absolute inset-0 bg-[#2D1B15]/60 backdrop-blur-xl" onClick={() => setIsModalOpen(false)}></div>
           <div className="relative bg-white w-full max-w-4xl rounded-[60px] p-16 shadow-[0_50px_100px_rgba(0,0,0,0.4)] animate-in zoom-in-95 duration-300">
+            <button onClick={() => setIsModalOpen(false)} className="absolute top-8 right-8 p-4 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition-all cursor-pointer group">
+             <X size={32} className="group-hover:rotate-90 transition-transform duration-300" />
+            </button>
             <h2 className="text-5xl font-black text-[#2D1B15] text-center mb-16 tracking-tight">Today's Vibe?</h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
               {['Radiant', 'Charged', 'Cozy', 'Flowy'].map((s) => (
