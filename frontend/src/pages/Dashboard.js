@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 // import 'react-calendar/dist/Calendar.css';
 import { Sparkles, Heart, Plus, ChevronRight, Flower, Activity, MessageCircle, Moon, Zap, Target, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import CycleCalendar from '../components/CycleCalendar';
 import Navbar from '../components/Navbar';
+import axios from 'axios';
 
 
 const Dashboard = () => {
@@ -12,6 +14,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [daysUntil, setDaysUntil] = useState(8);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userName, setUserName] = useState("");
   const [date, setDate] = useState(new Date());
 
  
@@ -32,6 +35,30 @@ const Dashboard = () => {
     setIsModalOpen(false);
     setSelectedSymptoms([]); 
   };
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/'); 
+          return;
+        }
+
+        const res = await axios.get('http://localhost:5000/api/auth/user', {
+          headers: { 'x-auth-token': token }
+        });
+        
+        setUserName(res.data.name); 
+      } catch (err) {
+        console.error("Auth Error:", err);
+        localStorage.removeItem('token');
+        navigate('/');
+      }
+    };
+
+    getUserData();
+  }, [navigate]);
   
 
   return (
@@ -44,7 +71,7 @@ const Dashboard = () => {
     
        <header className="w-full px-8 lg:px-20 pt-12 pb-8 flex justify-between items-center relative z-20">
         <div className="flex-shrink-0">
-          <p className="text-[20px] font-black text-rose-500 uppercase tracking-[0.4em] mb-2 drop-shadow-sm">Hey Beautiful</p>
+          <p className="text-[20px] font-black text-rose-500 uppercase tracking-[0.4em] mb-2 drop-shadow-sm">Hey {userName || "Beautiful"}</p>
           <h1 className="text-6xl font-black tracking-tight text-[#2D1B15]">Overview</h1>
         </div>
 

@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const authMiddleware = require('../middleware/authMiddleware');
 
 
 router.post('/register', async (req, res) => {
@@ -43,6 +44,15 @@ router.post('/login', async (req, res) => {
     });
   } catch (err) {
     res.status(500).send("Server Error");
+  }
+});
+
+router.get('/user', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json(user);
+  } catch (err) {
+    res.status(500).send('Server Error');
   }
 });
 
