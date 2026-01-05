@@ -39,6 +39,7 @@ import Dashboard from './pages/Dashboard';
 import AIChat from './pages/AIChat'; 
 import Profile from './pages/Profile';
 import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -46,10 +47,22 @@ function App() {
         
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/chat" element={<AIChat />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+              } />
+            <Route path="/chat" element={
+              <ProtectedRoute>
+              <AIChat />
+              </ProtectedRoute>
+              } />
             {/* <Route path="/calendar" element={<Dashboard />} /> */}
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+              } />
           </Routes>
        
       
