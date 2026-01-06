@@ -16,6 +16,7 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [date, setDate] = useState(new Date());
+  const [logs, setLogs] = useState([]);
 
  
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
@@ -26,39 +27,84 @@ const Dashboard = () => {
     );
   };
 
-  const handleSaveLog = () => {
-    console.log("Data package for Axios:", {
-      date: new Date().toISOString(),
+  // const handleSaveLog = () => {
+  //   console.log("Data package for Axios:", {
+  //     date: new Date().toISOString(),
+  //     symptoms: selectedSymptoms,
+  //     phase: "Luteal"
+  //   });
+  //   setIsModalOpen(false);
+  //   setSelectedSymptoms([]); 
+  // };
+
+  const handleSaveLog = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    await axios.post('http://localhost:5000/api/auth/logs', {
       symptoms: selectedSymptoms,
       phase: "Luteal"
+    }, {
+      headers: { 'x-auth-token': token }
     });
+
+    alert("Vibe Saved! ");
     setIsModalOpen(false);
-    setSelectedSymptoms([]); 
-  };
+    setSelectedSymptoms([]);
+  } catch (err) {
+    alert("Error saving log");
+  }
+};
+
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       const token = localStorage.getItem('token');
+  //       if (!token) {
+  //         navigate('/'); 
+  //         return;
+  //       }
+
+  //       const res = await axios.get('http://localhost:5000/api/auth/user', {
+  //         headers: { 'x-auth-token': token }
+  //       });
+        
+  //       setUserName(res.data.name); 
+  //     } catch (err) {
+  //       console.error("Auth Error:", err);
+  //       localStorage.removeItem('token');
+  //       navigate('/');
+  //     }
+  //   };
+
+  //   getUserData();
+  // }, [navigate]);
 
   useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/'); 
-          return;
-        }
+  const getUserData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) { navigate('/'); return; }
 
-        const res = await axios.get('http://localhost:5000/api/auth/user', {
-          headers: { 'x-auth-token': token }
-        });
-        
-        setUserName(res.data.name); 
-      } catch (err) {
-        console.error("Auth Error:", err);
-        localStorage.removeItem('token');
-        navigate('/');
-      }
-    };
+      // 1. User ka naam lene ke liye
+      const res = await axios.get('http://localhost:5000/api/auth/user', {
+        headers: { 'x-auth-token': token }
+      });
+      setUserName(res.data.name); 
 
-    getUserData();
-  }, [navigate]);
+      // 2. Logs ka count lene ke liye (Sirf ye 3 lines add karo)
+      const logsRes = await axios.get('http://localhost:5000/api/auth/logs', {
+        headers: { 'x-auth-token': token }
+      });
+      setLogs(logsRes.data); // Database se aaye saare logs yahan save ho gaye
+
+    } catch (err) {
+      console.error("Auth Error:", err);
+      // localStorage.removeItem('token'); // Isse abhi comment rakho testing ke liye
+      // navigate('/');
+    }
+  };
+  getUserData();
+}, [navigate]);
   
 
   return (
@@ -155,7 +201,7 @@ const Dashboard = () => {
              <div className="w-[2px] h-20 bg-white/10"></div>
              <div className="text-center group cursor-default">
                 <Plus size={40} className="text-rose-400 mb-4 mx-auto group-hover:scale-125 transition-transform" />
-                <p className="text-5xl font-black text-white tracking-tighter">12</p>
+                <p className="text-5xl font-black text-white tracking-tighter">{logs.length}</p>
                 <p className="text-rose-300/40 text-[12px] font-black uppercase tracking-[0.3em] mt-2">Logs</p>
              </div>
           </div>
