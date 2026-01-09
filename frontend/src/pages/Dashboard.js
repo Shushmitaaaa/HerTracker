@@ -17,6 +17,8 @@ const Dashboard = () => {
   const [userName, setUserName] = useState("");
   const [date, setDate] = useState(new Date());
   const [logs, setLogs] = useState([]);
+  const [cycleData, setCycleData] = useState({ length: 28, lastDate: null });
+  const [phase, setPhase] = useState("Loading...");
 
  
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
