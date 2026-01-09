@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [logs, setLogs] = useState([]);
   const [cycleData, setCycleData] = useState({ length: 28, lastDate: null });
   const [phase, setPhase] = useState("Loading...");
+  const [nextDate, setNextDate] = useState("Calculating...");
 
  
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
@@ -57,52 +58,72 @@ const Dashboard = () => {
   }
 };
 
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       const token = localStorage.getItem('token');
-  //       if (!token) {
-  //         navigate('/'); 
-  //         return;
-  //       }
 
-  //       const res = await axios.get('http://localhost:5000/api/auth/user', {
-  //         headers: { 'x-auth-token': token }
-  //       });
-        
-  //       setUserName(res.data.name); 
-  //     } catch (err) {
-  //       console.error("Auth Error:", err);
-  //       localStorage.removeItem('token');
-  //       navigate('/');
-  //     }
-  //   };
+//   useEffect(() => {
+//   const getUserData = async () => {
+//     try {
+//       const token = localStorage.getItem('token');
+//       if (!token) { navigate('/'); return; }
 
-  //   getUserData();
-  // }, [navigate]);
+//       // 1. User ka naam lene ke liye
+//       const res = await axios.get('http://localhost:5000/api/auth/user', {
+//         headers: { 'x-auth-token': token }
+//       });
+//       setUserName(res.data.name); 
 
-  useEffect(() => {
+//       // 2. Logs ka count lene ke liye (Sirf ye 3 lines add karo)
+//       const logsRes = await axios.get('http://localhost:5000/api/auth/logs', {
+//         headers: { 'x-auth-token': token }
+//       });
+//       setLogs(logsRes.data); // Database se aaye saare logs yahan save ho gaye
+
+//     } catch (err) {
+//       console.error("Auth Error:", err);
+//       // localStorage.removeItem('token'); // Isse abhi comment rakho testing ke liye
+//       // navigate('/');
+//     }
+//   };
+//   getUserData();
+// }, [navigate]);
+
+useEffect(() => {
   const getUserData = async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) { navigate('/'); return; }
 
-      // 1. User ka naam lene ke liye
-      const res = await axios.get('http://localhost:5000/api/auth/user', {
-        headers: { 'x-auth-token': token }
-      });
-      setUserName(res.data.name); 
+      // User data aur Logs dono fetch kar rahe hain
+      const [userRes, logsRes] = await Promise.all([
+        axios.get('http://localhost:5000/api/auth/user', { headers: { 'x-auth-token': token } }),
+        axios.get('http://localhost:5000/api/auth/logs', { headers: { 'x-auth-token': token } })
+      ]);
 
-      // 2. Logs ka count lene ke liye (Sirf ye 3 lines add karo)
-      const logsRes = await axios.get('http://localhost:5000/api/auth/logs', {
-        headers: { 'x-auth-token': token }
-      });
-      setLogs(logsRes.data); // Database se aaye saare logs yahan save ho gaye
+      setUserName(userRes.data.name);
+      setLogs(logsRes.data);
 
+      
+      if (userRes.data.lastPeriodDate) {
+        const lastDate = new Date(userRes.data.lastPeriodDate);
+        const cycle = userRes.data.cycleLength || 28;
+        const today = new Date();
+        
+
+        const nextPeriod = new Date(lastDate);
+        nextPeriod.setDate(lastDate.getDate() + cycle);
+
+        
+        const diffTime = nextPeriod - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        setDaysUntil(diffDays > 0 ? diffDays : "0");
+        
+        
+        if (diffDays <= 7) setPhase("Luteal Phase");
+        else if (diffDays > 21) setPhase("Menstrual Phase");
+        else setPhase("Follicular Phase");
+      }
     } catch (err) {
-      console.error("Auth Error:", err);
-      // localStorage.removeItem('token'); // Isse abhi comment rakho testing ke liye
-      // navigate('/');
+      console.error("Fetch Error:", err);
     }
   };
   getUserData();
@@ -152,7 +173,7 @@ const Dashboard = () => {
             </div>
 
             
-            <div className="absolute top-10 left-10 bg-rose-500 text-white px-8 py-2.5 rounded-full text-xs font-black uppercase tracking-widest shadow-lg">Luteal Phase</div>
+            <div className="absolute top-10 left-10 bg-rose-500 text-white px-8 py-2.5 rounded-full text-xs font-black uppercase tracking-widest shadow-lg">{phase}</div>
             
             <div className="flex items-baseline justify-center leading-none">
               <span className="text-[180px] lg:text-[240px] font-black tracking-tighter text-[#2D1B15] drop-shadow-2xl">{daysUntil}</span>
@@ -164,7 +185,7 @@ const Dashboard = () => {
           </div>
 
          
-          <div className="lg:col-span-4 grid grid-rows-2 gap-8">
+          {/* <div className="lg:col-span-4 grid grid-rows-2 gap-8">
             <div className="bg-[#2D1B15] rounded-[50px] p-10 text-white shadow-2xl flex flex-col justify-center relative overflow-hidden group">
                 <Zap className="absolute right-[-20px] top-[-20px] text-rose-500/20 w-40 h-40 group-hover:rotate-12 transition-transform duration-700" />
                 <h3 className="text-3xl font-black mb-4">Focus Mode</h3>
@@ -177,8 +198,38 @@ const Dashboard = () => {
                 </div>
                 <p className="text-[#8D6E63] text-lg font-bold">Estimated: Jan 8th, 2026</p>
             </div>
-          </div>
+          </div> */}
+
+          <div className="lg:col-span-4 grid grid-rows-2 gap-8">
+    
+    <div className="bg-[#2D1B15] rounded-[50px] p-10 text-white shadow-2xl flex flex-col justify-center relative overflow-hidden group">
+        <Zap className="absolute right-[-20px] top-[-20px] text-rose-500/20 w-40 h-40 group-hover:rotate-12 transition-transform duration-700" />
+        <h3 className="text-3xl font-black mb-4">Focus Mode</h3>
+        <p className="text-rose-100/60 text-lg leading-relaxed font-medium">Your cognitive sharpess is peaking. Best time for creative work.</p>
+    </div>
+
+    
+    <div className="bg-white/80 rounded-[50px] p-10 border border-white shadow-xl flex flex-col justify-center">
+        <div className="flex items-center gap-4 mb-4">
+            <Target className="text-rose-500" size={32} />
+            <h4 className="text-2xl font-black text-[#2D1B15]">Next Cycle</h4>
         </div>
+        <p className="text-[#8D6E63] text-lg font-bold">
+            Estimated: {
+              daysUntil !== null && daysUntil !== undefined ? (
+                new Date(new Date().setDate(new Date().getDate() + Number(daysUntil)))
+                .toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+              ) : "Set your date"
+            }
+        </p>
+    </div>
+</div>
+
+          
+        </div> 
+
+        
+        
 
        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
