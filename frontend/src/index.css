@@ -75,3 +75,22 @@
   margin-bottom: 20px;
 }
 
+/* Calendar Red Dots */
+.period-highlight {
+  background-color: #f43f5e !important; /* rose-500 */
+  color: white !important;
+  border-radius: 9999px !important;
+  font-weight: bold;
+}
+
+/* Hide default calendar border for cleaner look */
+.react-calendar {
+  border: none !important;
+  width: 100% !important;
+  background: transparent !important;
+  font-family: inherit;
+}
+
+.react-calendar__tile {
+  @apply rounded-xl py-4; /* Tailwind mixin */
+}

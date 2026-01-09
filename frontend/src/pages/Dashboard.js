@@ -20,6 +20,7 @@ const Dashboard = () => {
   const [cycleData, setCycleData] = useState({ length: 28, lastDate: null });
   const [phase, setPhase] = useState("Loading...");
   const [nextDate, setNextDate] = useState("Calculating...");
+  const [userData, setUserData] = useState(null);
 
  
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
@@ -30,15 +31,11 @@ const Dashboard = () => {
     );
   };
 
-  // const handleSaveLog = () => {
-  //   console.log("Data package for Axios:", {
-  //     date: new Date().toISOString(),
-  //     symptoms: selectedSymptoms,
-  //     phase: "Luteal"
-  //   });
-  //   setIsModalOpen(false);
-  //   setSelectedSymptoms([]); 
-  // };
+  const currentMonthYear = new Date().toLocaleDateString('en-US', { 
+  month: 'long', 
+  year: 'numeric' 
+});
+
 
   const handleSaveLog = async () => {
   try {
@@ -100,6 +97,7 @@ useEffect(() => {
 
       setUserName(userRes.data.name);
       setLogs(logsRes.data);
+      setUserData(userRes.data);
 
       
       if (userRes.data.lastPeriodDate) {
@@ -202,28 +200,28 @@ useEffect(() => {
 
           <div className="lg:col-span-4 grid grid-rows-2 gap-8">
     
-    <div className="bg-[#2D1B15] rounded-[50px] p-10 text-white shadow-2xl flex flex-col justify-center relative overflow-hidden group">
-        <Zap className="absolute right-[-20px] top-[-20px] text-rose-500/20 w-40 h-40 group-hover:rotate-12 transition-transform duration-700" />
-        <h3 className="text-3xl font-black mb-4">Focus Mode</h3>
-        <p className="text-rose-100/60 text-lg leading-relaxed font-medium">Your cognitive sharpess is peaking. Best time for creative work.</p>
-    </div>
+              <div className="bg-[#2D1B15] rounded-[50px] p-10 text-white shadow-2xl flex flex-col justify-center relative overflow-hidden group">
+                  <Zap className="absolute right-[-20px] top-[-20px] text-rose-500/20 w-40 h-40 group-hover:rotate-12 transition-transform duration-700" />
+                  <h3 className="text-3xl font-black mb-4">Focus Mode</h3>
+                  <p className="text-rose-100/60 text-lg leading-relaxed font-medium">Your cognitive sharpess is peaking. Best time for creative work.</p>
+              </div>
 
-    
-    <div className="bg-white/80 rounded-[50px] p-10 border border-white shadow-xl flex flex-col justify-center">
-        <div className="flex items-center gap-4 mb-4">
-            <Target className="text-rose-500" size={32} />
-            <h4 className="text-2xl font-black text-[#2D1B15]">Next Cycle</h4>
-        </div>
-        <p className="text-[#8D6E63] text-lg font-bold">
-            Estimated: {
-              daysUntil !== null && daysUntil !== undefined ? (
-                new Date(new Date().setDate(new Date().getDate() + Number(daysUntil)))
-                .toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-              ) : "Set your date"
-            }
-        </p>
-    </div>
-</div>
+              
+              <div className="bg-white/80 rounded-[50px] p-10 border border-white shadow-xl flex flex-col justify-center">
+                  <div className="flex items-center gap-4 mb-4">
+                      <Target className="text-rose-500" size={32} />
+                      <h4 className="text-2xl font-black text-[#2D1B15]">Next Cycle</h4>
+                  </div>
+                  <p className="text-[#8D6E63] text-lg font-bold">
+                      Estimated: {
+                        daysUntil !== null && daysUntil !== undefined ? (
+                          new Date(new Date().setDate(new Date().getDate() + Number(daysUntil)))
+                          .toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                        ) : "Set your date"
+                      }
+                  </p>
+              </div>
+          </div>
 
           
         </div> 
@@ -266,14 +264,17 @@ useEffect(() => {
             <h3 className="text-4xl font-black text-[#2D1B15] tracking-tight">Cycle History</h3>
             <div className="bg-white px-8 py-3 rounded-full shadow-lg border border-rose-100 flex items-center gap-3">
             <Moon size={20} className="text-rose-400" />
-            <span className="text-rose-400 font-black uppercase text-sm tracking-widest">December 2025</span>
+            <span className="text-rose-400 font-black uppercase text-sm tracking-widest">{currentMonthYear}</span>
             </div>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 bg-white/40 backdrop-blur-3xl rounded-[60px] p-8 lg:p-12 shadow-xl border border-white">
             <div className="lg:col-span-8 bg-white rounded-[45px] p-10 shadow-2xl border border-rose-50/50 flex items-center justify-center">
             <div className="w-full">
-                <CycleCalendar />
+                <CycleCalendar 
+                  lastPeriodDate={userData?.lastPeriodDate} 
+                  periodLength={userData?.periodLength} 
+                />
             </div>
             </div>
 
