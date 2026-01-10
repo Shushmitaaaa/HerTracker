@@ -7,12 +7,11 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // State for hover movement
+ 
   const [hoveredTab, setHoveredTab] = useState(null);
-  // State for current page highlight
+ 
   const [activeTab, setActiveTab] = useState('Today');
 
-  // Sync the brown pill with the current URL on page load/change
   useEffect(() => {
     const path = location.pathname;
     if (path === '/chat') setActiveTab('Assistant');
@@ -32,7 +31,7 @@ const handleNavClick = (path, name) => {
     if (name === 'Cycle') {
       const element = document.getElementById('cycle-section');
       if (element) {
-        // Calculate where the element is + current scroll - a 150px gap
+       
         const offset = 150; 
         const bodyRect = document.body.getBoundingClientRect().top;
         const elementRect = element.getBoundingClientRect().top;
@@ -45,7 +44,8 @@ const handleNavClick = (path, name) => {
         });
         setActiveTab('Today');
       } else {
-        navigate('/');
+        
+        navigate('/dashboard#cycle-section');
         setTimeout(() => {
           const el = document.getElementById('cycle-section');
           if (el) {
@@ -76,7 +76,7 @@ const handleNavClick = (path, name) => {
               isHighlighted 
                 ? 'bg-[#2D1B15] text-white shadow-xl scale-105' 
                 : 'text-[#2D1B15]/70 hover:text-[#2D1B15]' 
-                /* text-[#2D1B15]/70 is now dark enough to be visible */
+                
             }`}
           >
             {item.name}

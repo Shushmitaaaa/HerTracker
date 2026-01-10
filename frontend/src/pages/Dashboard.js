@@ -83,49 +83,124 @@ const Dashboard = () => {
 //   getUserData();
 // }, [navigate]);
 
-useEffect(() => {
-  const getUserData = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) { navigate('/'); return; }
+// useEffect(() => {
+//   const getUserData = async () => {
+//     try {
+//       const token = localStorage.getItem('token');
+//       if (!token) { navigate('/'); return; }
 
-      // User data aur Logs dono fetch kar rahe hain
-      const [userRes, logsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/auth/user', { headers: { 'x-auth-token': token } }),
-        axios.get('http://localhost:5000/api/auth/logs', { headers: { 'x-auth-token': token } })
-      ]);
+//       // User data aur Logs dono fetch kar rahe hain
+//       const [userRes, logsRes] = await Promise.all([
+//         axios.get('http://localhost:5000/api/auth/user', { headers: { 'x-auth-token': token } }),
+//         axios.get('http://localhost:5000/api/auth/logs', { headers: { 'x-auth-token': token } })
+//       ]);
 
-      setUserName(userRes.data.name);
-      setLogs(logsRes.data);
-      setUserData(userRes.data);
+//       setUserName(userRes.data.name);
+//       setLogs(logsRes.data);
+//       setUserData(userRes.data);
 
       
-      if (userRes.data.lastPeriodDate) {
-        const lastDate = new Date(userRes.data.lastPeriodDate);
-        const cycle = userRes.data.cycleLength || 28;
-        const today = new Date();
+//       if (userRes.data.lastPeriodDate) {
+//         const lastDate = new Date(userRes.data.lastPeriodDate);
+//         const cycle = userRes.data.cycleLength || 28;
+//         const today = new Date();
         
 
-        const nextPeriod = new Date(lastDate);
-        nextPeriod.setDate(lastDate.getDate() + cycle);
+//         const nextPeriod = new Date(lastDate);
+//         nextPeriod.setDate(lastDate.getDate() + cycle);
 
         
-        const diffTime = nextPeriod - today;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+//         const diffTime = nextPeriod - today;
+//         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         
-        setDaysUntil(diffDays > 0 ? diffDays : "0");
+//         setDaysUntil(diffDays > 0 ? diffDays : "0");
         
         
-        if (diffDays <= 7) setPhase("Luteal Phase");
-        else if (diffDays > 21) setPhase("Menstrual Phase");
-        else setPhase("Follicular Phase");
+//         if (diffDays <= 7) setPhase("Luteal Phase");
+//         else if (diffDays > 21) setPhase("Menstrual Phase");
+//         else setPhase("Follicular Phase");
+//       }
+//     } catch (err) {
+//       console.error("Fetch Error:", err);
+//     }
+//   };
+//   getUserData();
+// }, []);
+
+useEffect(() => {
+    const fetchDashboardData = async () => {
+      const token = localStorage.getItem('token');
+      
+      // 1. Agar token hi nahi hai, tabhi Login page bhejo
+      if (!token) {
+        navigate('/');
+        return;
       }
-    } catch (err) {
-      console.error("Fetch Error:", err);
-    }
-  };
-  getUserData();
-}, [navigate]);
+
+      try {
+        // Dono APIs ko ek saath fetch karo
+        const [userRes, logsRes] = await Promise.all([
+          axios.get('http://localhost:5000/api/auth/user', { 
+            headers: { 'x-auth-token': token } 
+          }),
+          axios.get('http://localhost:5000/api/auth/logs', { 
+            headers: { 'x-auth-token': token } 
+          })
+        ]);
+
+        // State update karo
+        setUserName(userRes.data.name);
+        setLogs(logsRes.data);
+        setUserData(userRes.data);
+
+        // Period calculation logic
+        if (userRes.data.lastPeriodDate) {
+          const lastDate = new Date(userRes.data.lastPeriodDate);
+          const cycle = userRes.data.cycleLength || 28;
+          const today = new Date();
+          const nextPeriod = new Date(lastDate);
+          nextPeriod.setDate(lastDate.getDate() + cycle);
+          
+          const diffTime = nextPeriod - today;
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          setDaysUntil(diffDays > 0 ? diffDays : "0");
+
+          if (diffDays <= 7) setPhase("Luteal Phase");
+          else if (diffDays > 21) setPhase("Menstrual Phase");
+          else setPhase("Follicular Phase");
+        }
+
+       
+        if (window.location.hash === '#cycle-section') {
+          setTimeout(() => {
+            const element = document.getElementById('cycle-section');
+            if (element) {
+              const offset = 150; // Same as your navbar offset
+              const bodyRect = document.body.getBoundingClientRect().top;
+              const elementRect = element.getBoundingClientRect().top;
+              const elementPosition = elementRect - bodyRect;
+              const offsetPosition = elementPosition - offset;
+
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              });
+            }
+          }, 500); 
+        }
+
+      } catch (err) {
+        console.error("Dashboard Fetch Error:", err);
+        if (err.response && err.response.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/');
+        }
+      }
+    };
+
+    fetchDashboardData();
+   
+  }, []);
   
 
   return (
@@ -183,20 +258,6 @@ useEffect(() => {
           </div>
 
          
-          {/* <div className="lg:col-span-4 grid grid-rows-2 gap-8">
-            <div className="bg-[#2D1B15] rounded-[50px] p-10 text-white shadow-2xl flex flex-col justify-center relative overflow-hidden group">
-                <Zap className="absolute right-[-20px] top-[-20px] text-rose-500/20 w-40 h-40 group-hover:rotate-12 transition-transform duration-700" />
-                <h3 className="text-3xl font-black mb-4">Focus Mode</h3>
-                <p className="text-rose-100/60 text-lg leading-relaxed font-medium">Your cognitive sharpess is peaking. Best time for creative work.</p>
-            </div>
-            <div className="bg-white/80 rounded-[50px] p-10 border border-white shadow-xl flex flex-col justify-center">
-                <div className="flex items-center gap-4 mb-4">
-                    <Target className="text-rose-500" size={32} />
-                    <h4 className="text-2xl font-black text-berry">Next Cycle</h4>
-                </div>
-                <p className="text-[#8D6E63] text-lg font-bold">Estimated: Jan 8th, 2026</p>
-            </div>
-          </div> */}
 
           <div className="lg:col-span-4 grid grid-rows-2 gap-8">
     
@@ -208,9 +269,11 @@ useEffect(() => {
 
               
               <div className="bg-white/80 rounded-[50px] p-10 border border-white shadow-xl flex flex-col justify-center">
+              <div className="absolute right-[-10px] top-[-10px] bg-rose-100/30 w-32 h-32 rounded-full blur-3xl group-hover:bg-rose-200/40 transition-all duration-700"></div>
                   <div className="flex items-center gap-4 mb-4">
                       <Target className="text-rose-500" size={32} />
-                      <h4 className="text-2xl font-black text-[#2D1B15]">Next Cycle</h4>
+                      <h4 className="text-3xl font-black text-[#2D1B15]">Next Cycle</h4>
+                      
                   </div>
                   <p className="text-[#8D6E63] text-lg font-bold">
                       Estimated: {
