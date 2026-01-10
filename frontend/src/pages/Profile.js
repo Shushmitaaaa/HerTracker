@@ -6,6 +6,7 @@ import axios from 'axios';
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [userInfo, setUserInfo] = useState({
     name: "",
     cycleLength: 28,
@@ -13,7 +14,7 @@ const Profile = () => {
     lastPeriodDate: ""
   });
 
-  // 1. Database se user data fetch karna
+  
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -35,20 +36,21 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  // 2. Data save karne ka logic (Database sync)
+ 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put('http://localhost:5000/api/auth/profile', {
         cycleLength: userInfo.cycleLength,
-        periodLength: userInfo.periodLength, // Match with User.js schema
+        periodLength: userInfo.periodLength, 
         lastPeriodDate: userInfo.lastPeriodDate
       }, {
         headers: { 'x-auth-token': token }
       });
       
       setIsEditing(false);
-      alert("Profile Sync Successfully! ✨");
+      setShowSuccessPopup(true); 
+    setTimeout(() => setShowSuccessPopup(false), 30000);
     } catch (err) {
       alert("Update Failed. Check Backend Console.");
       console.error(err);
@@ -63,7 +65,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-[#FFF0F3] font-sans antialiased text-[#3C2A21] pb-20 relative overflow-x-hidden">
       
-      {/* Background Glow */}
+     
       <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-rose-200/30 rounded-full blur-[120px] pointer-events-none"></div>
 
       <header className="w-full px-8 lg:px-20 pt-12 pb-8 flex justify-between items-center relative z-20">
@@ -72,7 +74,7 @@ const Profile = () => {
            <Navbar />
         </div>
         
-        {/* Toggle between Settings and Save/Cancel */}
+       
         <div className="flex gap-4">
           {isEditing && (
             <button onClick={() => setIsEditing(false)} className="h-16 w-16 bg-white rounded-[24px] shadow-xl flex items-center justify-center text-gray-400 hover:text-red-500 transition-all">
@@ -92,7 +94,7 @@ const Profile = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           
           {/* Sidebar / User Card */}
-          <div className="lg:col-span-4 bg-white rounded-[60px] p-12 shadow-2xl flex flex-col items-center text-center border border-rose-50">
+          <div className="lg:col-span-4 bg-white rounded-[60px] p-12 shadow-2xl flex flex-col items-center text-center border border-rose-50 h-fit self-start">
             <div className="w-40 h-40 bg-gradient-to-br from-rose-400 to-rose-600 rounded-[50px] shadow-2xl flex items-center justify-center mb-8 rotate-3">
               <User size={80} color="white" />
             </div>
@@ -103,7 +105,7 @@ const Profile = () => {
             </button>
           </div>
 
-          {/* Settings Section */}
+          
           <div className="lg:col-span-8 space-y-8">
             <div className="bg-white/50 backdrop-blur-3xl rounded-[60px] p-12 border border-white shadow-xl">
               <h3 className="text-3xl font-black mb-10 flex items-center gap-4">
@@ -111,7 +113,7 @@ const Profile = () => {
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Cycle Length Input */}
+                
                 <div className="bg-white p-8 rounded-[40px] shadow-inner border border-rose-50">
                   <p className="text-[#8D6E63] font-bold mb-2 uppercase text-xs tracking-widest">Avg Cycle Length</p>
                   <div className="flex items-center justify-between">
@@ -129,7 +131,7 @@ const Profile = () => {
                   </div>
                 </div>
 
-                {/* Period Length Input */}
+                
                 <div className="bg-white p-8 rounded-[40px] shadow-inner border border-rose-50">
                   <p className="text-[#8D6E63] font-bold mb-2 uppercase text-xs tracking-widest">Period Duration</p>
                   <div className="flex items-center justify-between">
@@ -181,6 +183,29 @@ const Profile = () => {
           </div>
         </div>
       </main>
+      {showSuccessPopup && (
+  <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-in fade-in duration-300">
+    <div className="absolute inset-0 bg-[#2D1B15]/40 backdrop-blur-md"></div>
+    
+    <div className="relative bg-white rounded-[50px] p-12 shadow-[0_50px_100px_rgba(0,0,0,0.3)] border border-white max-w-md w-full text-center transform animate-in zoom-in-95 duration-300">
+      <div className="w-24 h-24 bg-rose-500 rounded-[35px] flex items-center justify-center mx-auto mb-8 shadow-lg shadow-rose-200 rotate-12">
+        <Save size={48} color="white" />
+      </div>
+      
+      <h3 className="text-4xl font-black text-[#2D1B15] mb-4 tracking-tight">Sync Complete!</h3>
+      <p className="text-[#8D6E63] text-lg font-bold mb-8">
+        Your profile data is now safely encrypted and synced. ✨
+      </p>
+      
+      <button 
+        onClick={() => setShowSuccessPopup(false)}
+        className="w-full bg-[#2D1B15] text-white py-6 rounded-[28px] font-black text-xl hover:bg-black transition-all shadow-xl"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
     </div>
   );
 };
