@@ -15,12 +15,13 @@ const Dashboard = () => {
   const [daysUntil, setDaysUntil] = useState(8);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userName, setUserName] = useState("");
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
   const [logs, setLogs] = useState([]);
-  const [cycleData, setCycleData] = useState({ length: 28, lastDate: null });
+  // const [cycleData, setCycleData] = useState({ length: 28, lastDate: null });
   const [phase, setPhase] = useState("Loading...");
-  const [nextDate, setNextDate] = useState("Calculating...");
+  // const [nextDate, setNextDate] = useState("Calculating...");
   const [userData, setUserData] = useState(null);
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
  
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
@@ -40,7 +41,7 @@ const Dashboard = () => {
   const handleSaveLog = async () => {
   try {
     const token = localStorage.getItem('token');
-    await axios.post('http://localhost:5000/api/auth/logs', {
+    await axios.post(`${API_BASE_URL}/api/auth/logs`, {
       symptoms: selectedSymptoms,
       phase: "Luteal"
     }, {
@@ -56,104 +57,37 @@ const Dashboard = () => {
 };
 
 
-//   useEffect(() => {
-//   const getUserData = async () => {
-//     try {
-//       const token = localStorage.getItem('token');
-//       if (!token) { navigate('/'); return; }
-
-//       // 1. User ka naam lene ke liye
-//       const res = await axios.get('http://localhost:5000/api/auth/user', {
-//         headers: { 'x-auth-token': token }
-//       });
-//       setUserName(res.data.name); 
-
-//       // 2. Logs ka count lene ke liye (Sirf ye 3 lines add karo)
-//       const logsRes = await axios.get('http://localhost:5000/api/auth/logs', {
-//         headers: { 'x-auth-token': token }
-//       });
-//       setLogs(logsRes.data); // Database se aaye saare logs yahan save ho gaye
-
-//     } catch (err) {
-//       console.error("Auth Error:", err);
-//       // localStorage.removeItem('token'); // Isse abhi comment rakho testing ke liye
-//       // navigate('/');
-//     }
-//   };
-//   getUserData();
-// }, [navigate]);
-
-// useEffect(() => {
-//   const getUserData = async () => {
-//     try {
-//       const token = localStorage.getItem('token');
-//       if (!token) { navigate('/'); return; }
-
-//       // User data aur Logs dono fetch kar rahe hain
-//       const [userRes, logsRes] = await Promise.all([
-//         axios.get('http://localhost:5000/api/auth/user', { headers: { 'x-auth-token': token } }),
-//         axios.get('http://localhost:5000/api/auth/logs', { headers: { 'x-auth-token': token } })
-//       ]);
-
-//       setUserName(userRes.data.name);
-//       setLogs(logsRes.data);
-//       setUserData(userRes.data);
-
-      
-//       if (userRes.data.lastPeriodDate) {
-//         const lastDate = new Date(userRes.data.lastPeriodDate);
-//         const cycle = userRes.data.cycleLength || 28;
-//         const today = new Date();
-        
-
-//         const nextPeriod = new Date(lastDate);
-//         nextPeriod.setDate(lastDate.getDate() + cycle);
-
-        
-//         const diffTime = nextPeriod - today;
-//         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-//         setDaysUntil(diffDays > 0 ? diffDays : "0");
-        
-        
-//         if (diffDays <= 7) setPhase("Luteal Phase");
-//         else if (diffDays > 21) setPhase("Menstrual Phase");
-//         else setPhase("Follicular Phase");
-//       }
-//     } catch (err) {
-//       console.error("Fetch Error:", err);
-//     }
-//   };
-//   getUserData();
-// }, []);
-
 useEffect(() => {
     const fetchDashboardData = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const tokenFromUrl = params.get('token');
+      
+      if (tokenFromUrl) {
+        localStorage.setItem('token', tokenFromUrl);
+        window.history.replaceState({}, document.title, "/dashboard");
+      }
       const token = localStorage.getItem('token');
       
-      // 1. Agar token hi nahi hai, tabhi Login page bhejo
       if (!token) {
         navigate('/');
         return;
       }
 
       try {
-        // Dono APIs ko ek saath fetch karo
         const [userRes, logsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/auth/user', { 
+          axios.get(`${API_BASE_URL}/api/auth/user`, { 
             headers: { 'x-auth-token': token } 
           }),
-          axios.get('http://localhost:5000/api/auth/logs', { 
+          axios.get(`${API_BASE_URL}/api/auth/logs`, { 
             headers: { 'x-auth-token': token } 
           })
         ]);
 
-        // State update karo
+      
         setUserName(userRes.data.name);
         setLogs(logsRes.data);
         setUserData(userRes.data);
 
-        // Period calculation logic
         if (userRes.data.lastPeriodDate) {
           const lastDate = new Date(userRes.data.lastPeriodDate);
           const cycle = userRes.data.cycleLength || 28;
@@ -175,7 +109,7 @@ useEffect(() => {
           setTimeout(() => {
             const element = document.getElementById('cycle-section');
             if (element) {
-              const offset = 150; // Same as your navbar offset
+              const offset = 150; 
               const bodyRect = document.body.getBoundingClientRect().top;
               const elementRect = element.getBoundingClientRect().top;
               const elementPosition = elementRect - bodyRect;

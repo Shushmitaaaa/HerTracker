@@ -7,6 +7,7 @@ import AIChat from './pages/AIChat';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
+import ResetPassword from './components/ResetPassword'
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
                 <Profile />
               </ProtectedRoute>
               } />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
           </Routes>
        
       

@@ -4,7 +4,9 @@ import { User, Calendar, Settings, LogOut, ChevronRight, Shield, Save, X } from 
 import Navbar from '../components/Navbar';
 import axios from 'axios';
 
+
 const Profile = () => {
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [userInfo, setUserInfo] = useState({
@@ -19,7 +21,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/auth/user', {
+        const res = await axios.get(`${API_BASE_URL}/api/auth/user`, {
           headers: { 'x-auth-token': token }
         });
         
@@ -40,7 +42,7 @@ const Profile = () => {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/api/auth/profile', {
+      await axios.put(`${API_BASE_URL}/api/auth/profile`, {
         cycleLength: userInfo.cycleLength,
         periodLength: userInfo.periodLength, 
         lastPeriodDate: userInfo.lastPeriodDate
