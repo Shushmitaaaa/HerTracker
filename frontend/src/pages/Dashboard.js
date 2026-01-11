@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 // import Calendar from 'react-calendar';
 // import 'react-calendar/dist/Calendar.css';
-import { Sparkles, Heart, Plus, ChevronRight, Flower, Activity, MessageCircle, Moon, Zap, Target, X } from 'lucide-react';
+import { Sparkles, Heart, Plus, ChevronRight, Flower, Activity, MessageCircle, Zap, Target, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import CycleCalendar from '../components/CycleCalendar';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
+import CycleSection from '../components/CycleSection';
 
 
 const Dashboard = () => {
@@ -32,10 +32,10 @@ const Dashboard = () => {
     );
   };
 
-  const currentMonthYear = new Date().toLocaleDateString('en-US', { 
-  month: 'long', 
-  year: 'numeric' 
-});
+//   const currentMonthYear = new Date().toLocaleDateString('en-US', { 
+//   month: 'long', 
+//   year: 'numeric' 
+// });
 
 
   const handleSaveLog = async () => {
@@ -99,9 +99,17 @@ useEffect(() => {
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           setDaysUntil(diffDays > 0 ? diffDays : "0");
 
-          if (diffDays <= 7) setPhase("Luteal Phase");
-          else if (diffDays > 21) setPhase("Menstrual Phase");
-          else setPhase("Follicular Phase");
+          if (diffDays <= 0) {
+              setPhase("Menstrual Phase");
+          } else if (diffDays <= 7) {
+              setPhase("Luteal Phase");
+          } else if (diffDays > 7 && diffDays <= 13) {
+              setPhase("Ovulatory Phase");
+          } else if (diffDays > 13 && diffDays <= 21) {
+              setPhase("Follicular Phase");
+          } else {
+              setPhase("Menstrual Phase");
+          }
         }
 
        
@@ -135,6 +143,31 @@ useEffect(() => {
     fetchDashboardData();
    
   }, []);
+
+  const phaseDetails = {
+  "Menstrual Phase": {
+    title: "Rest Mode",
+    desc: "You are in your menstrual phase.Your energy is at its lowest. Focus on intuitive movement, light stretching, and deep rest."
+  },
+  "Follicular Phase": {
+    title: "Creative Spark",
+    desc: "You are in your follicular phase.Estrogen is rising! You're more open to new ideas. Perfect time for brainstorming and planning."
+  },
+  "Ovulatory Phase": {
+    title: "Peak Power",
+    desc: "You are in your ovulatory phase.High energy and confidence. Great for public speaking, social events, and high-intensity workouts."
+  },
+  "Luteal Phase": {
+    title: "Focus Mode",
+    desc: "You are in your luteal phase.Your cognitive sharpness is peaking. Best time for detail-oriented tasks and creative work."
+  },
+  "Loading...": {
+    title: "Syncing...",
+    desc: "Calculating your current cycle insights to provide personalized tips."
+  }
+};
+
+const currentPhaseInfo = phaseDetails[phase] || phaseDetails["Luteal Phase"];
   
 
   return (
@@ -195,10 +228,17 @@ useEffect(() => {
 
           <div className="lg:col-span-4 grid grid-rows-2 gap-8">
     
-              <div className="bg-[#2D1B15] rounded-[50px] p-10 text-white shadow-2xl flex flex-col justify-center relative overflow-hidden group">
+              {/* <div className="bg-[#2D1B15] rounded-[50px] p-10 text-white shadow-2xl flex flex-col justify-center relative overflow-hidden group">
                   <Zap className="absolute right-[-20px] top-[-20px] text-rose-500/20 w-40 h-40 group-hover:rotate-12 transition-transform duration-700" />
                   <h3 className="text-3xl font-black mb-4">Focus Mode</h3>
                   <p className="text-rose-100/60 text-lg leading-relaxed font-medium">Your cognitive sharpess is peaking. Best time for creative work.</p>
+              </div> */}
+              <div className="bg-[#2D1B15] rounded-[50px] p-10 text-white shadow-2xl flex flex-col justify-center relative overflow-hidden group">
+                  <Zap className="absolute right-[-20px] top-[-20px] text-rose-500/20 w-40 h-40 group-hover:rotate-12 transition-transform duration-700" />
+                  <h3 className="text-3xl font-black mb-4">{currentPhaseInfo.title}</h3>
+                  <p className="text-rose-100/60 text-lg leading-relaxed font-medium">
+                    {currentPhaseInfo.desc}
+                  </p>
               </div>
 
               
@@ -256,7 +296,7 @@ useEffect(() => {
         </div>
 
        
-        <section id="cycle-section" className="scroll-mt-60 mb-20">
+        {/* <section id="cycle-section" className="scroll-mt-60 mb-20">
         <div className="flex justify-between items-center mb-10 px-4">
             <h3 className="text-4xl font-black text-[#2D1B15] tracking-tight">Cycle History</h3>
             <div className="bg-white px-8 py-3 rounded-full shadow-lg border border-rose-100 flex items-center gap-3">
@@ -295,7 +335,9 @@ useEffect(() => {
             </div>
             </div>
         </div>
-        </section>
+        </section> */}
+        <CycleSection userData={userData} />
+        
       </main>
 
       
@@ -346,3 +388,5 @@ useEffect(() => {
 };
 
 export default Dashboard;
+
+
