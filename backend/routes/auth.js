@@ -5,11 +5,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authMiddleware = require('../middleware/authMiddleware');
 const Log = require('../models/Log');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const OpenAI = require("openai");
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 
 
@@ -86,23 +88,55 @@ router.get('/logs', authMiddleware, async (req, res) => {
   }
 });
 
+// router.post('/chat', authMiddleware, async (req, res) => {
+//   try {
+//     const { message } = req.body;
+  
+//     const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
+
+//     const prompt = `You are a warm, empathetic female health assistant. 
+//     A user named Shushmita is asking: ${message}. 
+//     Provide short, helpful, and medical-friendly advice.`;
+
+//     const result = await model.generateContent(prompt);
+//     const response = await result.response;
+    
+//     res.json({ reply: response.text() });
+//   } catch (err) {
+//     console.error("Gemini Error:", err);
+//     res.status(500).json({ msg: "AI not responding", error: err.message });
+//   }
+// });
+
 router.post('/chat', authMiddleware, async (req, res) => {
   try {
     const { message } = req.body;
-  
-    const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
 
-    const prompt = `You are a warm, empathetic female health assistant. 
-    A user named Shushmita is asking: ${message}. 
-    Provide short, helpful, and medical-friendly advice.`;
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a warm, empathetic female health assistant for HerTracker. Give short, caring, medically safe advice."
+        },
+        {
+          role: "user",
+          content: message
+        }
+      ],
+      max_tokens: 80,
+      temperature: 0.7
+    });
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    
-    res.json({ reply: response.text() });
+    res.json({
+      reply: completion.choices[0].message.content
+    });
+
   } catch (err) {
-    console.error("Gemini Error:", err);
-    res.status(500).json({ msg: "AI not responding", error: err.message });
+    console.error("OPENAI ERROR:", err);
+    res.status(500).json({
+      reply: "AI is currently unavailable. Please try again later 🌸"
+    });
   }
 });
 
