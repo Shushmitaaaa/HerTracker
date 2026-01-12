@@ -14,7 +14,7 @@ const AIChat = () => {
   const [messages, setMessages] = useState([
     { 
       role: 'bot', 
-      text: "Hello Shushmita! I'm your AI assistant. How are you feeling today? Ask me anything about your health or cycle. 🌸" 
+      text: "Hello! I'm your AI assistant. How are you feeling today? Ask me anything about your health or cycle. 🌸" 
     }
   ]);
 
