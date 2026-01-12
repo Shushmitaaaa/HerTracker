@@ -8,7 +8,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://hertracker.vercel.app'
+    'https://her-tracker.vercel.app'
   ],
   credentials: true
 }));
