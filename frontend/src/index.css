@@ -18,7 +18,7 @@
 
 .wave-layer {
   position: absolute;
-  top: 70%; 
+  top: 50%; 
   left: 50%;
   width: 250%;
   height: 250%;
@@ -28,7 +28,7 @@
 }
 
 .wave-layer-back {
-  top: 72%;
+  top: 52%;
   background: rgba(255, 224, 230, 0.3);
   animation: wave-flow 20s infinite linear reverse;
   border-radius: 40%;
@@ -94,3 +94,4 @@
 .react-calendar__tile {
   @apply rounded-xl py-4; /* Tailwind mixin */
 }
+
