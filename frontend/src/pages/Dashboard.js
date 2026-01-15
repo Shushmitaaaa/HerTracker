@@ -198,7 +198,7 @@ const Dashboard = () => {
             <p className="text-base md:text-[20px] font-black text-rose-500 uppercase tracking-[0.2em] sm:tracking-[0.4em] mb-1 sm:mb-2 drop-shadow-sm">
               Hey {userName || "Beautiful"}
             </p>
-            <h1 className="text-5xl lg:text-6xl font-black tracking-tight text-[#2D1B15]">Overview</h1>
+            <h1 className="text-5xl lg:text-6xl font-black tracking-tight text-[#2D1B15]">HerTracker</h1>
           </div>
 
           
